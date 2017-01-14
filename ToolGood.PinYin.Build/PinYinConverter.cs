@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace ToolGood.PinYin.Build
@@ -8,9 +6,10 @@ namespace ToolGood.PinYin.Build
     /// <summary>
     /// 汉字拼音转换类
     /// </summary>
-    class PinYinConverter
+    internal class PinYinConverter
     {
         #region 数组信息
+
         private static int[] pyValue = new int[]
         {
             -20319, -20317, -20304, -20295, -20292, -20283, -20265, -20257, -20242,
@@ -58,6 +57,7 @@ namespace ToolGood.PinYin.Build
             -10544, -10533, -10519, -10331, -10329, -10328, -10322, -10315, -10309,
             -10307, -10296, -10281, -10274, -10270, -10262, -10260, -10256, -10254
         };
+
         private static string[] pyName = new string[]
          {
              "A", "Ai", "An", "Ang", "Ao", "Ba", "Bai", "Ban", "Bang", "Bao", "Bei",
@@ -101,7 +101,9 @@ namespace ToolGood.PinYin.Build
              "Zhuang", "Zhui", "Zhun", "Zhuo", "Zi", "Zong", "Zou", "Zu", "Zuan",
              "Zui", "Zun", "Zuo"
          };
+
         #region 二级汉字
+
         /// <summary>
         /// 二级汉字数组
         /// </summary>
@@ -300,6 +302,7 @@ namespace ToolGood.PinYin.Build
             ,"鬣","麽","麾","縻","麂","麇","麈","麋","麒","鏖","麝","麟","黛","黜","黝","黠"
             ,"黟","黢","黩","黧","黥","黪","黯","鼢","鼬","鼯","鼹","鼷","鼽","鼾","齄"
         };
+
         /// <summary>
         /// 二级汉字对应拼音数组
         /// </summary>
@@ -494,18 +497,26 @@ namespace ToolGood.PinYin.Build
                 "Huan","Lie","Me","Hui","Mi","Ji","Jun","Zhu","Mi","Qi","Ao","She","Lin","Dai","Chu","You",
                 "Xia","Yi","Qu","Du","Li","Qing","Can","An","Fen","You","Wu","Yan","Xi","Qiu","Han","Zha"
            };
+
         #endregion 二级汉字
+
         #region 变量定义
+
         // GB2312-80 标准规范中第一个汉字的机内码.即"啊"的机内码
         private const int firstChCode = -20319;
+
         // GB2312-80 标准规范中最后一个汉字的机内码.即"齄"的机内码
         private const int lastChCode = -2050;
+
         // GB2312-80 标准规范中最后一个一级汉字的机内码.即"座"的机内码
         private const int lastOfOneLevelChCode = -10247;
+
         // 配置中文字符
         //static Regex regex = new Regex("[\u4e00-\u9fa5]$");
-        #endregion
-        #endregion
+
+        #endregion 变量定义
+
+        #endregion 数组信息
 
         /// <summary>
         /// 获取单字拼音
@@ -514,24 +525,30 @@ namespace ToolGood.PinYin.Build
         /// <returns></returns>
         public static String Get(Char ch)
         {
-            if (ch >= 0x4e00 && ch <= 0x9faf) {
+            if (ch >= 0x4e00 && ch <= 0x9faf)
+            {
                 var arr = Encoding.GetEncoding("gb2312").GetBytes(ch.ToString());
                 var chr = (Int16)arr[0] * 256 + (Int16)arr[1] - 65536;
                 if (chr > 0 && chr < 160) return ch.ToString();
                 // 判断是否超过GB2312-80标准中的汉字范围
                 if (chr > lastChCode || chr < firstChCode) { return ch.ToString(); }
                 // 如果是在一级汉字中
-                else if (chr <= lastOfOneLevelChCode) {
+                else if (chr <= lastOfOneLevelChCode)
+                {
                     // 将一级汉字分为12块,每块33个汉字.
-                    for (int aPos = 11; aPos >= 0; aPos--) {
+                    for (int aPos = 11; aPos >= 0; aPos--)
+                    {
                         int aboutPos = aPos * 33;
                         // 从最后的块开始扫描,如果机内码大于块的第一个机内码,说明在此块中
-                        if (chr >= pyValue[aboutPos]) {
+                        if (chr >= pyValue[aboutPos])
+                        {
                             // Console.WriteLine("存在于第 " + aPos.ToString() + " 块,此块的第一个机内码是: " + pyValue[aPos * 33].ToString());
                             // 遍历块中的每个音节机内码,从最后的音节机内码开始扫描,
                             // 如果音节内码小于机内码,则取此音节
-                            for (int i = aboutPos + 32; i >= aboutPos; i--) {
-                                if (pyValue[i] <= chr) {
+                            for (int i = aboutPos + 32; i >= aboutPos; i--)
+                            {
+                                if (pyValue[i] <= chr)
+                                {
                                     // Console.WriteLine("找到第一个小于要查找机内码的机内码: " + pyValue[i].ToString());
                                     return pyName[i];
                                 }
@@ -541,17 +558,18 @@ namespace ToolGood.PinYin.Build
                     }
                 }
                 // 如果是在二级汉字中
-                else {
+                else
+                {
                     int pos = Array.IndexOf(otherChinese, ch.ToString());
-                    if (pos != decimal.MinusOne) {
+                    if (pos != decimal.MinusOne)
+                    {
                         return otherPinYin[pos];
                     }
                 }
-
-
             }
             return ch.ToString();
         }
+
         /// <summary>
         /// 把汉字转换成拼音(全拼)
         /// </summary>
@@ -562,7 +580,8 @@ namespace ToolGood.PinYin.Build
             if (String.IsNullOrEmpty(str)) return String.Empty;
             var sb = new StringBuilder(str.Length * 10);
             var chs = str.ToCharArray();
-            for (var j = 0; j < chs.Length; j++) {
+            for (var j = 0; j < chs.Length; j++)
+            {
                 sb.Append(Get(chs[j]));
             }
             return sb.ToString();

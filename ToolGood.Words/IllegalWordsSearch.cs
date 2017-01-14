@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ToolGood.Words.internals;
-
 
 namespace ToolGood.Words
 {
@@ -27,22 +25,27 @@ namespace ToolGood.Words
             SrcString = null;
             Keyword = null;
         }
+
         /// <summary>
         /// 是否成功
         /// </summary>
         public bool Success { get; private set; }
+
         /// <summary>
         /// 开始位置
         /// </summary>
         public int Start { get; private set; }
+
         /// <summary>
         /// 结束位置
         /// </summary>
         public int End { get; private set; }
+
         /// <summary>
         /// 原始文本
         /// </summary>
         public string SrcString { get; private set; }
+
         /// <summary>
         /// 关键字
         /// </summary>
@@ -50,45 +53,55 @@ namespace ToolGood.Words
 
         public static IllegalWordsSearchResult Empty { get { return new IllegalWordsSearchResult(); } }
 
-
         public override string ToString()
         {
             return Start.ToString() + "|" + SrcString;
         }
     }
 
-    public class IllegalWordsSearch: BaseSearch
+    public class IllegalWordsSearch : BaseSearch
     {
         #region class
-        class NodeInfo
+
+        private class NodeInfo
         {
             public int Index;
             public bool End;
             public NodeInfo Parent;
             public TrieNode Node;
             public char Type;
+
             public bool TryGetValue(char c, out TrieNode node)
             {
                 return Node.TryGetValue(c, out node);
             }
+
             public bool CanJump(char c, int index, int jump)
             {
-                if (Index >= index - jump) {
+                if (Index >= index - jump)
+                {
                     int t;
-                    if (c < 127) {
+                    if (c < 127)
+                    {
                         t = Type + bitType[c];
-                    } else if (c >= 0x4e00 && c <= 0x9fa5) {
+                    }
+                    else if (c >= 0x4e00 && c <= 0x9fa5)
+                    {
                         t = Type + 'z';
-                    } else {
+                    }
+                    else
+                    {
                         return true;
                     }
-                    if (t == 98 || t == 194 || t == 244) {
+                    if (t == 98 || t == 194 || t == 244)
+                    {
                         return false;
                     }
                     return true;
                 }
                 return false;
             }
+
             public NodeInfo(int index, char c, TrieNode node, NodeInfo parent = null)
             {
                 Index = index;
@@ -96,20 +109,25 @@ namespace ToolGood.Words
                 End = node.End;
                 Parent = parent;
 
-                if (c < 127) {
+                if (c < 127)
+                {
                     Type = bitType[c];
-                } else if (c >= 0x4e00 && c <= 0x9fa5) {
+                }
+                else if (c >= 0x4e00 && c <= 0x9fa5)
+                {
                     Type = 'z';
-                } else {
+                }
+                else
+                {
                     Type = '0';
                 }
-
             }
         }
-        class SearchHelper : IDisposable
+
+        private class SearchHelper : IDisposable
         {
-            NodeInfo mainNode;
-            List<NodeInfo> nodes = new List<NodeInfo>();
+            private NodeInfo mainNode;
+            private List<NodeInfo> nodes = new List<NodeInfo>();
             private TrieNode[] _first;
             private int _jumpLength;
 
@@ -129,50 +147,70 @@ namespace ToolGood.Words
             {
                 bool hasEnd = false;
                 List<NodeInfo> new_node = new List<NodeInfo>();
+
                 #region mainNode
-                if (mainNode == null) {
+
+                if (mainNode == null)
+                {
                     TrieNode tn = _first[c];
-                    if (tn != null) {
+                    if (tn != null)
+                    {
                         mainNode = new NodeInfo(index, c, tn);
-                        if (mainNode.End) {
+                        if (mainNode.End)
+                        {
                             hasEnd = true;
                         }
                     }
-                } else {
-                    if (mainNode.CanJump(c, index, _jumpLength)) {
+                }
+                else
+                {
+                    if (mainNode.CanJump(c, index, _jumpLength))
+                    {
                         new_node.Add(mainNode);
                     }
                     TrieNode tn;
-                    if (mainNode.TryGetValue(c, out tn)) {
+                    if (mainNode.TryGetValue(c, out tn))
+                    {
                         mainNode = new NodeInfo(index, c, tn, mainNode);
-                        if (mainNode.End) {
+                        if (mainNode.End)
+                        {
                             hasEnd = true;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         tn = _first[c];
-                        if (tn != null) {
+                        if (tn != null)
+                        {
                             mainNode = new NodeInfo(index, c, tn);
-                            if (mainNode.End) {
+                            if (mainNode.End)
+                            {
                                 hasEnd = true;
                             }
-                        } else {
-
+                        }
+                        else
+                        {
                             mainNode = null;
                         }
                     }
                 }
-                #endregion
 
-                foreach (var n in nodes) {
-                    if (n.CanJump(c, index, _jumpLength)) {
+                #endregion mainNode
+
+                foreach (var n in nodes)
+                {
+                    if (n.CanJump(c, index, _jumpLength))
+                    {
                         new_node.Add(n);
                     }
                     TrieNode tn;
-                    if (n.TryGetValue(c, out tn)) {
+                    if (n.TryGetValue(c, out tn))
+                    {
                         var n2 = new NodeInfo(index, c, tn, n);
                         new_node.Add(n2);
 
-                        if (n2.End) {
+                        if (n2.End)
+                        {
                             hasEnd = true;
                         }
                     }
@@ -185,11 +223,15 @@ namespace ToolGood.Words
             {
                 List<Tuple<int, int, string>> list = new List<Tuple<int, int, string>>();
 
-                if (mainNode != null) {
-                    if (mainNode.End) {
-                        foreach (var keywords in mainNode.Node.Results) {
+                if (mainNode != null)
+                {
+                    if (mainNode.End)
+                    {
+                        foreach (var keywords in mainNode.Node.Results)
+                        {
                             var p = mainNode;
-                            for (int i = 0; i < keywords.Length - 1; i++) {
+                            for (int i = 0; i < keywords.Length - 1; i++)
+                            {
                                 p = p.Parent;
                             }
                             list.Add(Tuple.Create(p.Index, mainNode.Index, keywords));
@@ -197,10 +239,13 @@ namespace ToolGood.Words
                     }
                 }
 
-                foreach (var node in nodes) {
-                    foreach (var keywords in node.Node.Results) {
+                foreach (var node in nodes)
+                {
+                    foreach (var keywords in node.Node.Results)
+                    {
                         var p = node;
-                        for (int i = 0; i < keywords.Length - 1; i++) {
+                        for (int i = 0; i < keywords.Length - 1; i++)
+                        {
                             p = p.Parent;
                         }
                         list.Add(Tuple.Create(p.Index, node.Index, keywords));
@@ -209,12 +254,15 @@ namespace ToolGood.Words
                 return list;
             }
         }
-        #endregion
+
+        #endregion class
 
         #region Local fields
+
         protected const string bitType = "00000000000000000000000000000000000000000000000011111111110000000aaaaaaaaaaaaaaaaaaaaaaaaaa000000aaaaaaaaaaaaaaaaaaaaaaaaaa00000";
         protected int _jumpLength;
-        #endregion
+
+        #endregion Local fields
 
         public IllegalWordsSearch(int jumpLength = 1)
         {
@@ -224,33 +272,42 @@ namespace ToolGood.Words
         public override void SetKeywords(ICollection<string> _keywords)
         {
             HashSet<string> kws = new HashSet<string>();
-            foreach (var item in _keywords) {
+            foreach (var item in _keywords)
+            {
                 kws.Add(WordsHelper.ToSenseIllegalWords(item));
             }
             base.SetKeywords(kws);
         }
 
-
         public virtual bool ContainsAny(string text)
         {
             StringBuilder sb = new StringBuilder(text);
             TrieNode ptr = null;
-            for (int i = 0; i < text.Length; i++) {
+            for (int i = 0; i < text.Length; i++)
+            {
                 char c;
-                if (ToSenseWords(text[i], out c)) {
+                if (ToSenseWords(text[i], out c))
+                {
                     sb[i] = c;
                 }
                 TrieNode tn;
-                if (ptr == null) {
+                if (ptr == null)
+                {
                     tn = _first[c];
-                } else {
-                    if (ptr.TryGetValue(c, out tn) == false) {
+                }
+                else
+                {
+                    if (ptr.TryGetValue(c, out tn) == false)
+                    {
                         tn = _first[c];
                     }
                 }
-                if (tn != null) {
-                    if (tn.End) {
-                        foreach (var find in tn.Results) {
+                if (tn != null)
+                {
+                    if (tn.End)
+                    {
+                        foreach (var find in tn.Results)
+                        {
                             var r = GetIllegalResult(find, c, i + 1 - find.Length, i, text, sb);
                             if (r != null) return true;
                         }
@@ -263,13 +320,16 @@ namespace ToolGood.Words
             SearchHelper sh = new SearchHelper(ref _first, _jumpLength);
 
             //var searchText = WordsHelper.ToSenseWords(text);
-            for (int i = 0; i < text.Length; i++) {
+            for (int i = 0; i < text.Length; i++)
+            {
                 char c = sb[i];
                 //if (ToSenseWords(text[i], out c)) {
                 //    sb[i] = c;
                 //}
-                if (sh.FindChar(c, i)) {
-                    foreach (var keywordInfos in sh.GetKeywords()) {
+                if (sh.FindChar(c, i))
+                {
+                    foreach (var keywordInfos in sh.GetKeywords())
+                    {
                         var r = GetIllegalResult(keywordInfos.Item3, c, keywordInfos.Item1, keywordInfos.Item2, text, sb);
                         if (r != null) return true;
                     }
@@ -282,22 +342,31 @@ namespace ToolGood.Words
         {
             StringBuilder sb = new StringBuilder(text);
             TrieNode ptr = null;
-            for (int i = 0; i < text.Length; i++) {
+            for (int i = 0; i < text.Length; i++)
+            {
                 char c;
-                if (ToSenseWords(text[i], out c)) {
+                if (ToSenseWords(text[i], out c))
+                {
                     sb[i] = c;
                 }
                 TrieNode tn;
-                if (ptr == null) {
+                if (ptr == null)
+                {
                     tn = _first[c];
-                } else {
-                    if (ptr.TryGetValue(c, out tn) == false) {
+                }
+                else
+                {
+                    if (ptr.TryGetValue(c, out tn) == false)
+                    {
                         tn = _first[c];
                     }
                 }
-                if (tn != null) {
-                    if (tn.End) {
-                        foreach (var find in tn.Results) {
+                if (tn != null)
+                {
+                    if (tn.End)
+                    {
+                        foreach (var find in tn.Results)
+                        {
                             var r = GetIllegalResult(find, c, i + 1 - find.Length, i, text, sb);
                             if (r != null) return r;
                         }
@@ -308,13 +377,17 @@ namespace ToolGood.Words
 
             SearchHelper sh = new SearchHelper(ref _first, _jumpLength);
 
-            for (int i = 0; i < text.Length; i++) {
+            for (int i = 0; i < text.Length; i++)
+            {
                 char c;
-                if (ToSenseWords(text[i], out c)) {
+                if (ToSenseWords(text[i], out c))
+                {
                     sb[i] = c;
                 }
-                if (sh.FindChar(c, i)) {
-                    foreach (var keywordInfos in sh.GetKeywords()) {
+                if (sh.FindChar(c, i))
+                {
+                    foreach (var keywordInfos in sh.GetKeywords())
+                    {
                         var r = GetIllegalResult(keywordInfos.Item3, c, keywordInfos.Item1, keywordInfos.Item2, text, sb);
                         if (r != null) return r;
                     }
@@ -329,16 +402,22 @@ namespace ToolGood.Words
             SearchHelper sh = new SearchHelper(ref _first, _jumpLength);
             List<IllegalWordsSearchResult> result = new List<IllegalWordsSearchResult>();
 
-            for (int i = 0; i < text.Length; i++) {
+            for (int i = 0; i < text.Length; i++)
+            {
                 char c;
-                if (ToSenseWords(text[i], out c)) {
+                if (ToSenseWords(text[i], out c))
+                {
                     sb[i] = c;
                 }
-                if (sh.FindChar(c, i)) {
-                    foreach (var keywordInfos in sh.GetKeywords()) {
+                if (sh.FindChar(c, i))
+                {
+                    foreach (var keywordInfos in sh.GetKeywords())
+                    {
                         var r = GetIllegalResult(keywordInfos.Item3, c, keywordInfos.Item1, keywordInfos.Item2, text, sb);
-                        if (r != null) {
-                            if (result.Any(q=>q.Start==r.Start && q.End==r.End)==false) {
+                        if (r != null)
+                        {
+                            if (result.Any(q => q.Start == r.Start && q.End == r.End) == false)
+                            {
                                 result.Add(r);
                             }
                         }
@@ -354,10 +433,13 @@ namespace ToolGood.Words
             var all = FindAll(text);
             StringBuilder result = new StringBuilder(text);
             all = all.OrderBy(q => q.Start).ThenBy(q => q.End).ToList();
-            for (int i = all.Count - 1; i >= 0; i--) {
+            for (int i = all.Count - 1; i >= 0; i--)
+            {
                 var r = all[i];
-                for (int j = r.Start; j <= r.End; j++) {
-                    if (result[j] != replaceChar) {
+                for (int j = r.Start; j <= r.End; j++)
+                {
+                    if (result[j] != replaceChar)
+                    {
                         result[j] = replaceChar;
                     }
                 }
@@ -365,30 +447,37 @@ namespace ToolGood.Words
             return result.ToString();
         }
 
-
-
         #region private
+
         protected bool isInEnglishOrInNumber(string keyword, char ch, int end, string searchText)
         {
-            if (end < searchText.Length - 1) {
-                if (ch < 127) {
+            if (end < searchText.Length - 1)
+            {
+                if (ch < 127)
+                {
                     var c = searchText[end + 1];
-                    if (c < 127) {
+                    if (c < 127)
+                    {
                         int d = bitType[c] + bitType[ch];
-                        if (d == 98 || d == 194) {
+                        if (d == 98 || d == 194)
+                        {
                             return true;
                         }
                     }
                 }
             }
             var start = end + 1 - keyword.Length;
-            if (start > 0) {
+            if (start > 0)
+            {
                 var c = searchText[start - 1];
-                if (c < 127) {
+                if (c < 127)
+                {
                     var k = keyword[0];
-                    if (k < 127) {
+                    if (k < 127)
+                    {
                         int d = bitType[c] + bitType[k];
-                        if (d == 98 || d == 194) {
+                        if (d == 98 || d == 194)
+                        {
                             return true;
                         }
                     }
@@ -399,26 +488,33 @@ namespace ToolGood.Words
 
         private IllegalWordsSearchResult GetIllegalResult(string keyword, char ch, int start, int end, string srcText, StringBuilder searchText)
         {
-            if (end < searchText.Length - 1) {
-                if (ch < 127) {
+            if (end < searchText.Length - 1)
+            {
+                if (ch < 127)
+                {
                     char c;
                     ToSenseWords(searchText[end + 1], out c);
-                    if (c < 127) {
+                    if (c < 127)
+                    {
                         int d = bitType[c] + bitType[ch];
-                        if (d == 98 || d == 194) {
+                        if (d == 98 || d == 194)
+                        {
                             return null;
                         }
-
                     }
                 }
             }
-            if (start > 0) {
+            if (start > 0)
+            {
                 var c = searchText[start - 1];
-                if (c < 127) {
+                if (c < 127)
+                {
                     var k = keyword[0];
-                    if (k < 127) {
+                    if (k < 127)
+                    {
                         int d = bitType[c] + bitType[k];
-                        if (d == 98 || d == 194) {
+                        if (d == 98 || d == 194)
+                        {
                             return null;
                         }
                     }
@@ -429,29 +525,43 @@ namespace ToolGood.Words
 
         private bool ToSenseWords(char c, out char w)
         {
-            if (c < 'A') { } else if (c <= 'Z') {
+            if (c < 'A') { }
+            else if (c <= 'Z')
+            {
                 w = (char)(c | 0x20);
                 return true;
-            } else if (c < 9450) { } else if (c <= 12840) {//处理数字 
+            }
+            else if (c < 9450) { }
+            else if (c <= 12840)
+            {//处理数字
                 var index = Dict.nums1.IndexOf(c);
-                if (index > -1) {
+                if (index > -1)
+                {
                     w = Dict.nums2[index];
                     return true;
                 }
-            } else if (c == 12288) {
+            }
+            else if (c == 12288)
+            {
                 w = ' ';
                 return true;
-
-            } else if (c < 0x4e00) { } else if (c <= 0x9fa5) {
+            }
+            else if (c < 0x4e00) { }
+            else if (c <= 0x9fa5)
+            {
                 var k = Dict.Simplified[c - 0x4e00];
-                if (k != c) {
+                if (k != c)
+                {
                     w = k;
                     return true;
-
                 }
-            } else if (c < 65280) { } else if (c < 65375) {
+            }
+            else if (c < 65280) { }
+            else if (c < 65375)
+            {
                 var k = (c - 65248);
-                if ('A' <= k && k <= 'Z') {
+                if ('A' <= k && k <= 'Z')
+                {
                     k = k | 0x20;
                 }
                 w = (char)k;
@@ -461,9 +571,6 @@ namespace ToolGood.Words
             return false;
         }
 
-        #endregion
-
-
-
+        #endregion private
     }
 }

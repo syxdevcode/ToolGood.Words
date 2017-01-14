@@ -1,27 +1,25 @@
-﻿using System;
+﻿using Sinan.Util;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using Sinan.Util;
-using ToolGood.Words;
 
 namespace ToolGood.Words.Contrast
 {
-    class Program
+    internal class Program
     {
-        static TrieFilter tf1 = new TrieFilter();
-        static FastFilter ff = new FastFilter();
-        static StringSearch word = new StringSearch();
-        static WordsSearch search = new WordsSearch();
-        static IllegalWordsQuickSearch iword1 = new IllegalWordsQuickSearch();
-        static IllegalWordsSearch iword2 = new IllegalWordsSearch();
-        static Regex re;
-        static Regex re2;
+        private static TrieFilter tf1 = new TrieFilter();
+        private static FastFilter ff = new FastFilter();
+        private static StringSearch word = new StringSearch();
+        private static WordsSearch search = new WordsSearch();
+        private static IllegalWordsQuickSearch iword1 = new IllegalWordsQuickSearch();
+        private static IllegalWordsSearch iword2 = new IllegalWordsSearch();
+        private static Regex re;
+        private static Regex re2;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             ReadBadWord();
             var text = File.ReadAllText("Talk.txt");
@@ -51,8 +49,6 @@ namespace ToolGood.Words.Contrast
             Console.Write("-------------------- ToSenseIllegalWords --------------------\r\n");
 
             Run("ToSenseIllegalWords", () => { WordsHelper.ToSenseIllegalWords(text); });
-
-
 
             Console.Write("-------------------- FindFirst OR ContainsAny --------------------\r\n");
             Run("TrieFilter", () => { tf1.HasBadWord(text); });
@@ -92,30 +88,31 @@ namespace ToolGood.Words.Contrast
             Run("Regex.Match", () => { re2.Match(text); });
             Run("Regex.Matches", () => { re2.Matches(text); });
 
-
             Console.ReadKey();
-
         }
-        static void Run(string title, Action action)
+
+        private static void Run(string title, Action action)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            for (int i = 0; i < 100000; i++) {
+            for (int i = 0; i < 100000; i++)
+            {
                 action();
             }
             watch.Stop();
             Console.WriteLine(title + " : " + watch.ElapsedMilliseconds.ToString("N0") + "ms");
         }
 
-
-
-        static void ReadBadWord()
+        private static void ReadBadWord()
         {
             List<string> list = new List<string>();
-            using (StreamReader sw = new StreamReader(File.OpenRead("BadWord.txt"))) {
+            using (StreamReader sw = new StreamReader(File.OpenRead("BadWord.txt")))
+            {
                 string key = sw.ReadLine();
-                while (key != null) {
-                    if (key != string.Empty) {
+                while (key != null)
+                {
+                    if (key != string.Empty)
+                    {
                         tf1.AddKey(key);
 
                         ff.AddKey(key);
@@ -138,13 +135,9 @@ namespace ToolGood.Words.Contrast
 
             re = new Regex(str);
 
-
             var str2 = tf1.ToString();
             //str2 = Regex.Replace(str2, @"([\.\+\*\-\[\]\{\}!])", @"\$1");
             re2 = new Regex(str2);
         }
-
-
-
     }
 }

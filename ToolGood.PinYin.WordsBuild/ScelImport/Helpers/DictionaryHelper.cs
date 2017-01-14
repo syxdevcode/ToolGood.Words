@@ -11,14 +11,17 @@ namespace Studyzy.IMEWLConverter.Helpers
         {
             get
             {
-                if (dictionary.Count == 0) {
+                if (dictionary.Count == 0)
+                {
                     string allPinYin = "";// Dictionaries.ChineseCode;
                     string[] pyList = allPinYin.Split(new[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                    for (int i = 0; i < pyList.Length; i++) {
+                    for (int i = 0; i < pyList.Length; i++)
+                    {
                         string[] hzpy = pyList[i].Split('\t');
                         char hz = Convert.ToChar(hzpy[1]);
 
-                        dictionary.Add(hz, new ChineseCode {
+                        dictionary.Add(hz, new ChineseCode
+                        {
                             Code = hzpy[0],
                             Word = hzpy[1][0],
                             Wubi86 = hzpy[2],
@@ -36,7 +39,6 @@ namespace Studyzy.IMEWLConverter.Helpers
         {
             return Dict[c];
         }
-
 
         public static List<ChineseCode> GetAll()
         {

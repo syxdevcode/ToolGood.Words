@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PetaTest;
-using ToolGood.Words;
+﻿using PetaTest;
 
 namespace ToolGood.Words.Test
 {
     [TestFixture]
-    class WordHelperTest
+    internal class WordHelperTest
     {
         [Test]
         public void GetPinYin()
@@ -16,14 +11,11 @@ namespace ToolGood.Words.Test
             var a = WordsHelper.GetPinYinFast("阿");
             Assert.AreEqual("A", a);
 
-
             var b = WordsHelper.GetPinYin("摩擦棒");
             Assert.AreEqual("MoCaBang", b);
 
             var py = WordsHelper.GetPinYinFast("我爱中国");
             Assert.AreEqual("WoAiZhongGuo", py);
-
-
 
             py = WordsHelper.GetPinYin("快乐，乐清");
             Assert.AreEqual("KuaiLe，YueQing", py);
@@ -37,10 +29,7 @@ namespace ToolGood.Words.Test
             var pys = WordsHelper.GetAllPinYin('传');
             Assert.AreEqual("Chuan", pys[0]);
             Assert.AreEqual("Zhuan", pys[1]);
-
-
         }
-
 
         [Test]
         public void HasChinese()
@@ -54,12 +43,14 @@ namespace ToolGood.Words.Test
             var d = WordsHelper.HasChinese("I爱中国");
             Assert.AreEqual(true, d);
         }
+
         [Test]
         public void ToChineseRMB()
         {
             var t = WordsHelper.ToChineseRMB(12345678901.12);
             Assert.AreEqual("壹佰贰拾叁億肆仟伍佰陆拾柒萬捌仟玖佰零壹元壹角贰分", t);
         }
+
         [Test]
         public void ToSimplifiedChinese()
         {
@@ -67,13 +58,13 @@ namespace ToolGood.Words.Test
 
             Assert.AreEqual("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分", tw);
         }
+
         [Test]
         public void ToTraditionalChinese()
         {
             var tw = WordsHelper.ToTraditionalChinese("壹佰贰拾叁亿肆仟伍佰陆拾柒万捌仟玖佰零壹元壹角贰分");
             Assert.AreEqual("壹佰貳拾叁億肆仟伍佰陸拾柒萬捌仟玖佰零壹元壹角貳分", tw);
         }
-
 
         [Test]
         public void ToSBC_ToDBC()
@@ -82,9 +73,6 @@ namespace ToolGood.Words.Test
             var t = WordsHelper.ToDBC(s);
             Assert.AreEqual("ａｂｃＡＢＣ１２３", s);
             Assert.AreEqual("abcABC123", t);
-
-
         }
-
     }
 }

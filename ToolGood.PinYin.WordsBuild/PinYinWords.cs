@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ToolGood.PinYin.WordsBuild
 {
@@ -16,18 +14,21 @@ namespace ToolGood.PinYin.WordsBuild
         {
             PinYinList = PinYins.Split('\'').ToList();
             int[] pys = new int[Words.Length];
-            for (int i = 0; i < Words.Length; i++) {
+            for (int i = 0; i < Words.Length; i++)
+            {
                 pys[i] = GetPyName(PinYinList[i]);
             }
             return pys;
         }
 
         #region GetPyName
-        private  int GetPyName(string name)
+
+        private int GetPyName(string name)
         {
             name = name.Replace("0", "").Replace("1", "").Replace("2", "").Replace("3", "").Replace("4", "")
                 .Replace("5", "").Replace("6", "").Replace("7", "").Replace("8", "").Replace("9", "").ToUpper();
-            if (name.Length > 1) {
+            if (name.Length > 1)
+            {
                 name = name[0] + name.Substring(1).ToLower();
             }
             return pyName.IndexOf(name);
@@ -77,15 +78,14 @@ namespace ToolGood.PinYin.WordsBuild
              "Zui", "Zun", "Zuo","Pou","Dia","Cen","Dei","Ca","Nve","Lve","Shei","Zhei",
              "Ei","Chua","Nou","Tei"
        };
-        #endregion
 
-
-       
+        #endregion GetPyName
 
         public override int GetHashCode()
         {
             return Words.GetHashCode();
         }
+
         public override string ToString()
         {
             return Words + "|" + PinYins;

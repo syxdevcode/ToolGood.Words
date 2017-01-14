@@ -1,28 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 using ToolGood.Words.internals;
 
-
 namespace ToolGood.Words
 {
-    public class StringSearch: BaseSearch
+    public class StringSearch : BaseSearch
     {
         public string FindFirst(string text)
         {
             TrieNode ptr = null;
-            for (int i = 0; i < text.Length; i++) {
+            for (int i = 0; i < text.Length; i++)
+            {
                 TrieNode tn;
-                if (ptr == null) {
+                if (ptr == null)
+                {
                     tn = _first[text[i]];
-                } else {
-                    if (ptr.TryGetValue(text[i], out tn) == false) {
+                }
+                else
+                {
+                    if (ptr.TryGetValue(text[i], out tn) == false)
+                    {
                         tn = _first[text[i]];
                     }
                 }
-                if (tn != null) {
-                    if (tn.End) {
+                if (tn != null)
+                {
+                    if (tn.End)
+                    {
                         return tn.Results[0];
                     }
                 }
@@ -36,18 +40,26 @@ namespace ToolGood.Words
             TrieNode ptr = null;
             List<string> list = new List<string>();
 
-            for (int i = 0; i < text.Length; i++) {
+            for (int i = 0; i < text.Length; i++)
+            {
                 TrieNode tn;
-                if (ptr == null) {
+                if (ptr == null)
+                {
                     tn = _first[text[i]];
-                } else {
-                    if (ptr.TryGetValue(text[i], out tn) == false) {
+                }
+                else
+                {
+                    if (ptr.TryGetValue(text[i], out tn) == false)
+                    {
                         tn = _first[text[i]];
                     }
                 }
-                if (tn != null) {
-                    if (tn.End) {
-                        foreach (var item in tn.Results) {
+                if (tn != null)
+                {
+                    if (tn.End)
+                    {
+                        foreach (var item in tn.Results)
+                        {
                             list.Add(item);
                         }
                     }
@@ -60,17 +72,24 @@ namespace ToolGood.Words
         public bool ContainsAny(string text)
         {
             TrieNode ptr = null;
-            for (int i = 0; i < text.Length; i++) {
+            for (int i = 0; i < text.Length; i++)
+            {
                 TrieNode tn;
-                if (ptr == null) {
+                if (ptr == null)
+                {
                     tn = _first[text[i]];
-                } else {
-                    if (ptr.TryGetValue(text[i], out tn) == false) {
+                }
+                else
+                {
+                    if (ptr.TryGetValue(text[i], out tn) == false)
+                    {
                         tn = _first[text[i]];
                     }
                 }
-                if (tn != null) {
-                    if (tn.End) {
+                if (tn != null)
+                {
+                    if (tn.End)
+                    {
                         return true;
                     }
                 }
@@ -79,31 +98,41 @@ namespace ToolGood.Words
             return false;
         }
 
-        public string Replace(string text,char replaceChar='*')
+        public string Replace(string text, char replaceChar = '*')
         {
             StringBuilder result = new StringBuilder(text);
 
             TrieNode ptr = null;
-            for (int i = 0; i < text.Length; i++) {
+            for (int i = 0; i < text.Length; i++)
+            {
                 TrieNode tn;
-                if (ptr == null) {
+                if (ptr == null)
+                {
                     tn = _first[text[i]];
-                } else {
-                    if (ptr.TryGetValue(text[i], out tn) == false) {
+                }
+                else
+                {
+                    if (ptr.TryGetValue(text[i], out tn) == false)
+                    {
                         tn = _first[text[i]];
                     }
                 }
-                if (tn != null) {
-                    if (tn.End) {
+                if (tn != null)
+                {
+                    if (tn.End)
+                    {
                         var MaxLength = 0;
-                        for (int j = 0; j < tn.Results.Count; j++) {
-                            if (tn.Results[j].Length > MaxLength) {
+                        for (int j = 0; j < tn.Results.Count; j++)
+                        {
+                            if (tn.Results[j].Length > MaxLength)
+                            {
                                 MaxLength = tn.Results[j].Length;
                             }
                         }
 
                         var start = i + 1 - MaxLength;
-                        for (int j = start; j <= i; j++) {
+                        for (int j = start; j <= i; j++)
+                        {
                             result[j] = replaceChar;
                         }
                     }
@@ -112,6 +141,5 @@ namespace ToolGood.Words
             }
             return result.ToString();
         }
-
     }
 }

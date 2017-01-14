@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Sinan.Util
 {
@@ -23,11 +20,11 @@ namespace Sinan.Util
 
         // Fields
         private int[] m_buckets;
+
         private int m_count;
         private int m_freeList;
         private int m_lastIndex;
         private Slot[] m_slots;
-
 
         public HashStringSet()
         {
@@ -181,6 +178,7 @@ namespace Sinan.Util
         }
 
         #region 新增方法,避免字符分割
+
         public bool Contains(String item, int offset, int len)
         {
             if (this.m_buckets != null)
@@ -197,7 +195,7 @@ namespace Sinan.Util
             return false;
         }
 
-        static unsafe int InternalGetHashCode(String item, int offset, int len)
+        private static unsafe int InternalGetHashCode(String item, int offset, int len)
         {
             int h = 0;
             fixed (char* c = item)
@@ -216,7 +214,7 @@ namespace Sinan.Util
             return h & 0x7fffffff;
         }
 
-        static unsafe bool StringEquals(string a, string b, int offset, int len)
+        private static unsafe bool StringEquals(string a, string b, int offset, int len)
         {
             if (len != a.Length)
                 return false;
@@ -254,6 +252,7 @@ namespace Sinan.Util
                 return len == 0 || *s1_ptr == *s2_ptr;
             }
         }
-        #endregion
+
+        #endregion 新增方法,避免字符分割
     }
 }

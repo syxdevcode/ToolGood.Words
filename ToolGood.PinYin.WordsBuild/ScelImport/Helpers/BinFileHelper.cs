@@ -39,7 +39,8 @@ namespace Studyzy.IMEWLConverter.Helpers
         public static byte[] ReadArray(byte[] fs, int position, int count)
         {
             var bytes = new byte[count];
-            for (int i = 0; i < count; i++) {
+            for (int i = 0; i < count; i++)
+            {
                 bytes[i] = fs[position + i];
             }
 

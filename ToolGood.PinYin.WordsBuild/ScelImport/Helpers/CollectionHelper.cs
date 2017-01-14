@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Studyzy.IMEWLConverter.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Studyzy.IMEWLConverter.Entities;
 
 namespace Studyzy.IMEWLConverter.Helpers
 {
@@ -29,7 +29,6 @@ namespace Studyzy.IMEWLConverter.Helpers
         public static string GetString(IEnumerable<string> list, string split, BuildType buildType)
         {
             var sb = new StringBuilder();
-
 
             if (list == null)
             {
@@ -129,7 +128,7 @@ namespace Studyzy.IMEWLConverter.Helpers
                 var line = new string[codes.Count];
                 for (int j = 0; j < codes.Count; j++)
                 {
-                    line[j] = codes[j][i%codes[j].Count];
+                    line[j] = codes[j][i % codes[j].Count];
                 }
                 result.Add(String.Join(split, line));
             }

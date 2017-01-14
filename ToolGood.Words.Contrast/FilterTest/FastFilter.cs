@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections;
-using Sinan.Util;
-using Number = System.UInt16;
 using HashSet = Sinan.Util.HashStringSet;
+using Number = System.UInt16;
 
 namespace Sinan.Util
 {
@@ -14,14 +11,13 @@ namespace Sinan.Util
     /// </summary>
     public class FastFilter
     {
-        const int CharCount = char.MaxValue + 1;
+        private const int CharCount = char.MaxValue + 1;
         private int maxWordLength = 0;
         private int minWordLength = int.MaxValue;
         private HashSet m_hashSet = new HashSet();
         private Number[] m_fastCheck = new Number[CharCount];
         private Number[] m_startLength = new Number[CharCount];
         private Number[] m_endLength = new Number[CharCount];
-
 
         public void AddKey(string word)
         {

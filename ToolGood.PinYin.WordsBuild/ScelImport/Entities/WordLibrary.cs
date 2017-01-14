@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Studyzy.IMEWLConverter.Helpers;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Studyzy.IMEWLConverter.Helpers;
 
 namespace Studyzy.IMEWLConverter.Entities
 {
@@ -50,7 +50,6 @@ namespace Studyzy.IMEWLConverter.Entities
             set { rank = value; }
         }
 
-
         public CodeType CodeType { get; set; }
 
         /// <summary>
@@ -79,7 +78,7 @@ namespace Studyzy.IMEWLConverter.Entities
             }
         }
 
-        #endregion
+        #endregion 基本属性
 
         #region 扩展属性和方法
 
@@ -99,22 +98,22 @@ namespace Studyzy.IMEWLConverter.Entities
                     int i = 0;
                     foreach (var list in Codes)
                     {
-                        var code = (List<string>) list;
+                        var code = (List<string>)list;
                         result[i++] = code[0];
                     }
                     return result;
                 }
-               
+
                 return null;
             }
             set
             {
                 //CodeType=CodeType.Pinyin;
-                Codes = new Code(value,true);
+                Codes = new Code(value, true);
                 int i = 0;
                 foreach (string s in value)
                 {
-                    Codes[i++] = new List<string> {s};
+                    Codes[i++] = new List<string> { s };
                 }
             }
         }
@@ -139,7 +138,7 @@ namespace Studyzy.IMEWLConverter.Entities
         {
             get
             {
-                if (CodeType == CodeType.Wubi||CodeType==CodeType.Wubi98)
+                if (CodeType == CodeType.Wubi || CodeType == CodeType.Wubi98)
                 {
                     return Codes[0][0];
                 }
@@ -163,7 +162,7 @@ namespace Studyzy.IMEWLConverter.Entities
         /// </summary>
         /// <param name="type"></param>
         /// <param name="codes"></param>
-        public void SetCode(CodeType type, IList<string> codes,bool is1Char1Code)
+        public void SetCode(CodeType type, IList<string> codes, bool is1Char1Code)
         {
             CodeType = type;
             if (codes == null)
@@ -172,7 +171,7 @@ namespace Studyzy.IMEWLConverter.Entities
                 Codes.Clear();
                 return;
             }
-            Codes =new Code(codes,is1Char1Code);
+            Codes = new Code(codes, is1Char1Code);
         }
 
         public void SetCode(CodeType type, IList<IList<string>> str)
@@ -180,6 +179,7 @@ namespace Studyzy.IMEWLConverter.Entities
             CodeType = type;
             Codes = new Code(str);
         }
+
         public void SetCode(CodeType type, Code code)
         {
             CodeType = type;
@@ -211,9 +211,9 @@ namespace Studyzy.IMEWLConverter.Entities
         public override string ToString()
         {
             var codesList = Codes.ToCodeString(",");
-            return "WordLibrary 汉字：" + word + " Codes:" + string.Join(";",codesList.ToArray()) + " 词频：" + rank;
+            return "WordLibrary 汉字：" + word + " Codes:" + string.Join(";", codesList.ToArray()) + " 词频：" + rank;
         }
 
-        #endregion
+        #endregion 扩展属性和方法
     }
 }

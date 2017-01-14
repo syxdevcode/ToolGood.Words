@@ -29,7 +29,6 @@
 
 //            public Keyword(string text, int index, string[] pys, PinYinSearchType type)
 //            {
-
 //            }
 
 //            public void GetKeywords(Dictionary<string, Keyword> dict)
@@ -68,7 +67,6 @@
 //        Keyword[] _first;
 //        Dictionary<char, List<OneWord>> dict;
 
-
 //        public PinYinSearch2(PinYinSearchType type = PinYinSearchType.FirstPinYin)
 //        {
 //            _searchType = type;
@@ -86,16 +84,8 @@
 //            Dictionary<string, Keyword> dict = new Dictionary<string, Keyword>();
 //            _orderBy = dict.OrderBy(q => q.Key).Select(q => q.Value).ToArray();
 
-
-
-
-//        } 
+//        }
 //        #endregion
-
-
-
-
-
 
 //    }
 //}

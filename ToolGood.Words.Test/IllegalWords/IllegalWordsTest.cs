@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PetaTest;
+﻿using PetaTest;
 
 namespace ToolGood.Words.Test
 {
     [TestFixture]
-    class IllegalWordsTest
+    internal class IllegalWordsTest
     {
         [Test]
         public void IllegalWordsQuickSearchTest()
@@ -15,22 +11,17 @@ namespace ToolGood.Words.Test
             string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood";
             string test = "我是中国人";
 
-
             IllegalWordsQuickSearch iwords = new IllegalWordsQuickSearch(2);
             iwords.SetKeywords(s.Split('|'));
 
-
             var b = iwords.ContainsAny(test);
             Assert.AreEqual(true, b);
-
 
             var f = iwords.FindFirst(test);
             Assert.AreEqual(true, f.Success);
             Assert.AreEqual("中国", f.Keyword);
             Assert.AreEqual(2, f.Start);
             Assert.AreEqual(3, f.End);
-
-
 
             var all = iwords.FindAll(test);
             Assert.AreEqual("中国", all[0].SrcString);
@@ -57,7 +48,6 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("ToolGood", all[0].SrcString);
             Assert.AreEqual(1, all.Count);
 
-
             test = "asssert all";
             all = iwords.FindAll(test);
             Assert.AreEqual("all", all[0].SrcString);
@@ -78,11 +68,8 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("中国", all[0].SrcString);
             Assert.AreEqual(1, all.Count);
 
-
             var ss = iwords.Replace(test, '*');
             Assert.AreEqual("我是【**【人", ss);
-
-
         }
 
         [Test]
@@ -91,22 +78,17 @@ namespace ToolGood.Words.Test
             string s = "中国|国人|zg人|fuck|all|as|19|http://|ToolGood";
             string test = "我是中国人";
 
-
             IllegalWordsSearch iwords = new IllegalWordsSearch(2);
             iwords.SetKeywords(s.Split('|'));
 
-
             var b = iwords.ContainsAny(test);
             Assert.AreEqual(true, b);
-
 
             var f = iwords.FindFirst(test);
             Assert.AreEqual(true, f.Success);
             Assert.AreEqual("中国", f.Keyword);
             Assert.AreEqual(2, f.Start);
             Assert.AreEqual(3, f.End);
-
-
 
             var all = iwords.FindAll(test);
             Assert.AreEqual("中国", all[0].SrcString);
@@ -137,7 +119,6 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("ToolGood", all[1].SrcString);
             Assert.AreEqual(2, all.Count);
 
-
             test = "asssert all";
             all = iwords.FindAll(test);
             Assert.AreEqual("all", all[0].SrcString);
@@ -159,11 +140,8 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("国【人", all[1].SrcString);
             Assert.AreEqual(2, all.Count);
 
-
             var ss = iwords.Replace(test, '*');
             Assert.AreEqual("我是【****", ss);
-
-
         }
     }
 }

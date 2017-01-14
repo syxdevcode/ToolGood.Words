@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Studyzy.IMEWLConverter.Entities;
+using Studyzy.IMEWLConverter.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using Studyzy.IMEWLConverter.Entities;
-using Studyzy.IMEWLConverter.Helpers;
 
 namespace Studyzy.IMEWLConverter.IME
 {
@@ -37,7 +37,7 @@ namespace Studyzy.IMEWLConverter.IME
             return ReadScel(path);
         }
 
-        #endregion
+        #endregion IWordLibraryImport 成员
 
         private Dictionary<int, string> pyDic = new Dictionary<int, string>();
 
@@ -48,7 +48,7 @@ namespace Studyzy.IMEWLConverter.IME
             get { return false; }
         }
 
-        #endregion
+        #endregion IWordLibraryImport Members
 
         public WordLibraryList ImportLine(string line)
         {
@@ -123,7 +123,7 @@ namespace Studyzy.IMEWLConverter.IME
             {
                 num = new byte[4];
                 fs.Read(num, 0, 4);
-                int mark = num[0] + num[1]*256;
+                int mark = num[0] + num[1] * 256;
                 str = new byte[128];
                 fs.Read(str, 0, (num[2]));
                 string py = Encoding.Unicode.GetString(str);
@@ -140,7 +140,6 @@ namespace Studyzy.IMEWLConverter.IME
                 s.Append(value + "\",\"");
             }
             Debug.WriteLine(s.ToString());
-
 
             //fs.Position = 0x2628;
             fs.Position = hzPosition;
@@ -174,18 +173,18 @@ namespace Studyzy.IMEWLConverter.IME
         {
             var num = new byte[4];
             fs.Read(num, 0, 4);
-            int samePYcount = num[0] + num[1]*256;
-            int count = num[2] + num[3]*256;
+            int samePYcount = num[0] + num[1] * 256;
+            int count = num[2] + num[3] * 256;
             //接下来读拼音
             var str = new byte[256];
             for (int i = 0; i < count; i++)
             {
-                str[i] = (byte) fs.ReadByte();
+                str[i] = (byte)fs.ReadByte();
             }
             var wordPY = new List<string>();
-            for (int i = 0; i < count/2; i++)
+            for (int i = 0; i < count / 2; i++)
             {
-                int key = str[i*2] + str[i*2 + 1]*256;
+                int key = str[i * 2] + str[i * 2 + 1] * 256;
                 wordPY.Add(pyDic[key]);
             }
             //wordPY = wordPY.Remove(wordPY.Length - 1); //移除最后一个单引号
@@ -195,19 +194,19 @@ namespace Studyzy.IMEWLConverter.IME
             {
                 num = new byte[2];
                 fs.Read(num, 0, 2);
-                int hzBytecount = num[0] + num[1]*256;
+                int hzBytecount = num[0] + num[1] * 256;
                 str = new byte[hzBytecount];
                 fs.Read(str, 0, hzBytecount);
                 string word = Encoding.Unicode.GetString(str);
                 short unknown1 = BinFileHelper.ReadInt16(fs); //全部是10,肯定不是词频，具体是什么不知道
                 int unknown2 = BinFileHelper.ReadInt32(fs); //每个字对应的数字不一样，不知道是不是词频
-                pyAndWord.Add(new WordLibrary {Word = word, PinYin = wordPY.ToArray(), Rank = DefaultRank});
+                pyAndWord.Add(new WordLibrary { Word = word, PinYin = wordPY.ToArray(), Rank = DefaultRank });
                 CurrentStatus++;
                 //接下来10个字节什么意思呢？暂时先忽略了
                 var temp = new byte[6];
                 for (int i = 0; i < 6; i++)
                 {
-                    temp[i] = (byte) fs.ReadByte();
+                    temp[i] = (byte)fs.ReadByte();
                 }
             }
             return pyAndWord;

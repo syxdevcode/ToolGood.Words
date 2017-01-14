@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PetaTest;
+﻿using PetaTest;
 
 namespace ToolGood.Words.Test
 {
     [TestFixture]
-    class WordsSearchTest
+    internal class WordsSearchTest
     {
         [Test]
         public void test()
@@ -21,7 +17,6 @@ namespace ToolGood.Words.Test
             var b = wordsSearch.ContainsAny(test);
             Assert.AreEqual(true, b);
 
-
             var f = wordsSearch.FindFirst(test);
             Assert.AreEqual("中国", f.Keyword);
 
@@ -33,11 +28,8 @@ namespace ToolGood.Words.Test
             Assert.AreEqual("国人", alls[1].Keyword);
             Assert.AreEqual(2, alls.Count);
 
-            var t = wordsSearch.Replace (test,'*');
-            Assert.AreEqual("我是***",t);
-
-
+            var t = wordsSearch.Replace(test, '*');
+            Assert.AreEqual("我是***", t);
         }
-
     }
 }

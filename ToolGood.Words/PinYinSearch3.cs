@@ -12,12 +12,8 @@
 //        {
 //            private Dictionary<char, TreeNode> Nodes = new Dictionary<char, TreeNode>();
 //            private Dictionary<char, TreeNode> MinifyNodes = new Dictionary<char, TreeNode>();
-            
-
-
 
 //        }
-
 
 //        #endregion
 

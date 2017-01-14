@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Sinan.Util
 {
@@ -19,17 +16,20 @@ namespace Sinan.Util
         0x1ea867, 0x24ca19, 0x2c25c1, 0x34fa1b, 0x3f928f, 0x4c4987, 0x5b8b6f, 0x6dda89
         };
 
-
         internal static int GetPrime(int min)
         {
-            for (int i = 0; i < primes.Length; i++) {
+            for (int i = 0; i < primes.Length; i++)
+            {
                 int num2 = primes[i];
-                if (num2 >= min) {
+                if (num2 >= min)
+                {
                     return num2;
                 }
             }
-            for (int j = min | 1; j < 0x7fffffff; j += 2) {
-                if (IsPrime(j)) {
+            for (int j = min | 1; j < 0x7fffffff; j += 2)
+            {
+                if (IsPrime(j))
+                {
                     return j;
                 }
             }
@@ -38,12 +38,15 @@ namespace Sinan.Util
 
         internal static bool IsPrime(int candidate)
         {
-            if ((candidate & 1) == 0) {
+            if ((candidate & 1) == 0)
+            {
                 return (candidate == 2);
             }
             int num = (int)Math.Sqrt((double)candidate);
-            for (int i = 3; i <= num; i += 2) {
-                if ((candidate % i) == 0) {
+            for (int i = 3; i <= num; i += 2)
+            {
+                if ((candidate % i) == 0)
+                {
                     return false;
                 }
             }

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace ToolGood.Words.internals
 {
-  public   class TreeNode
+    public class TreeNode
     {
         #region Constructor & Methods
 
@@ -41,9 +38,11 @@ namespace ToolGood.Words.internals
         {
             return _transHash.ContainsKey(c);
         }
-        #endregion
+
+        #endregion Constructor & Methods
 
         #region Properties
+
         private char _char;
         private TreeNode _parent;
         private TreeNode _failure;
@@ -61,7 +60,6 @@ namespace ToolGood.Words.internals
             get { return _parent; }
         }
 
-
         /// <summary>
         /// Failure function - descendant node
         /// </summary>
@@ -71,7 +69,6 @@ namespace ToolGood.Words.internals
             set { _failure = value; }
         }
 
-
         /// <summary>
         /// Transition function - list of descendant nodes
         /// </summary>
@@ -79,7 +76,6 @@ namespace ToolGood.Words.internals
         {
             get { return _transitionsAr; }
         }
-
 
         /// <summary>
         /// Returns list of patterns ending by this letter
@@ -89,7 +85,6 @@ namespace ToolGood.Words.internals
             get { return _results; }
         }
 
-        #endregion
+        #endregion Properties
     }
-
 }
